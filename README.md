@@ -1,1 +1,1 @@
-# tutorial-docker
+# Laravelの環境です。MySQLも入っていますが、いらないかもしれないです。
