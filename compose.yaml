@@ -1,0 +1,39 @@
+services:
+  db:
+    build: ./docker/mysql
+    container_name: db-container
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_DATABASE=database
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=test
+      - TZ=Asia/Tokyo
+    ports:
+      - '3306:3306'
+  app:
+    build: ./docker/php
+    container_name: app-container
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./app/laravel:/var/www
+    ports:
+      - '8080:80'
+    depends_on:
+      - db
+  phpmyadmin:
+    build: ./docker/phpmyadmin
+    container_name: phpmyadmin-container
+    volumes:
+      - ./docker/phpmyadmin/sessions:/sessions
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=mysql
+    ports:
+      - '4040:80'
+    depends_on:
+      - db
