@@ -18,6 +18,7 @@ return [
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -35,10 +36,22 @@ return [
     |
     */
 
+    //'guards' => [
+    //    'web' => [
+    //        'driver' => 'session',
+    //        'provider' => 'users',
+    //    ],
+    //],
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+            'cookie' => 'user_session',  // ユーザー用のクッキー
+        ],
+        'fp_user' => [
+            'driver' => 'session',
+            'provider' => 'users',
+            'cookie' => 'fp_user_session',  // fp_user用のクッキー
         ],
     ],
 
@@ -59,16 +72,22 @@ return [
     |
     */
 
+    //'providers' => [
+    //    'users' => [
+    //        'driver' => 'eloquent',
+    //        'model' => env('AUTH_MODEL', App\Models\User::class),
+    //    ],
+    //
+    //    // 'users' => [
+    //    //     'driver' => 'database',
+    //    //     'table' => 'users',
+    //    // ],
+    //],
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
