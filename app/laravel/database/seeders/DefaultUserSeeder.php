@@ -17,8 +17,8 @@ class DefaultUserSeeder extends Seeder
     {
         User::create([
             'name' => 'User',
-            'email' => 'tankourou800@gmail.com',
-            'password' => Hash::make('Runrun831@'), // パスワードをハッシュ化
+            'email' => 'user@example.com',
+            'password' => Hash::make('password'), // パスワードをハッシュ化
         ]);
     }
 }
