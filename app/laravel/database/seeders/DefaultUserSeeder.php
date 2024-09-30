@@ -22,3 +22,5 @@ class DefaultUserSeeder extends Seeder
         ]);
     }
 }
+
+
