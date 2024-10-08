@@ -16,9 +16,10 @@ class DefaultUserSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name' => 'User',
-            'email' => 'user@example.com',
-            'password' => Hash::make('password'), // パスワードをハッシュ化
+            'name' => '葬送のフリーレン',
+            'type' => 'fp_user',
+            'email' => 'tankourou800@gmail.com',
+            'password' => Hash::make('Runrun831@'), // パスワードをハッシュ化
         ]);
     }
 }
