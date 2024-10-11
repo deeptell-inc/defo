@@ -20,6 +20,10 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "l": "^0.6.0"
+        "class-variance-authority": "^0.7.0",
+        "clsx": "^2.1.1",
+        "l": "^0.6.0",
+        "react-router-dom": "^6.26.2",
+        "tailwind-merge": "^2.5.3"
     }
 }

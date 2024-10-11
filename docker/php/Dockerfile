@@ -3,6 +3,7 @@ FROM php:8.3.7-apache
 # rewrite_module をインストール
 RUN a2enmod rewrite
 
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # ドキュメントルートを変更
 ENV APACHE_DOCUMENT_ROOT /var/www/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -17,3 +18,5 @@ RUN install-php-extensions intl pdo_mysql mysqli zip mbstring
 
 # コンテナログイン時のパス指定
 WORKDIR /var/www
+
+COPY . .

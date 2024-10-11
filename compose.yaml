@@ -37,3 +37,6 @@ services:
       - '4040:80'
     depends_on:
       - db
+networks:
+  app-network:
+    driver: bridge

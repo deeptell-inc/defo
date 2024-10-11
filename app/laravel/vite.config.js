@@ -11,6 +11,21 @@ export default defineConfig({
         }),
         react(),
     ],
+    resolve: {
+      alias: {
+        '@': '/resources/js',
+      },
+    },
+    server: {
+      watch: {
+        usePolling: true, // Dockerでファイルシステムの変更を検知するために必要
+      },
+      host: '0.0.0.0', // 外部からアクセスできるようにホストを指定
+      port: 3000, // フロントエンドのポート (Laravelは8080で動作中)
+      hmr: {
+        host: 'localhost',
+      },
+    },
     build: {
         rollupOptions: {
             input: 'resources/js/app.jsx',
