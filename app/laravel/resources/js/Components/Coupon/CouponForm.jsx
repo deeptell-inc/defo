@@ -29,15 +29,21 @@ const CouponForm = ({ coupon, onSubmit, onCancel }) => {
       [name]: type === 'checkbox' ? checked : value
     }));
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-  };
-
+  
   const handleGenerateCode = () => {
     setFormData(prev => ({ ...prev, code: generateCouponCode() }));
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/api/coupons', formData);
+      console.log('Coupon created:', response.data);
+    } catch (error) {
+      console.error('Error creating coupon:', error);
+    }
+  };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
