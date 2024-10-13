@@ -26,6 +26,14 @@ const CouponCard = ({ coupon }) => {
         </Badge>
         {coupon.isNew && <Badge className="bg-blue-500">新規</Badge>}
       </CardFooter>
+      <CardActions>
+        <Button size="small" onClick={onEdit}>
+          編集
+        </Button>
+        <Button size="small" onClick={onDelete}>
+          削除
+        </Button>
+      </CardActions>
     </Card>
   );
 };
