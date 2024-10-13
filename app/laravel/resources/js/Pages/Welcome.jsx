@@ -1,8 +1,10 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import React, { useState } from 'react';
 import CouponCard from '@/Components/Coupon/CouponCard';
 import SearchBar from '@/Components/Coupon/SearchBar';
 import { mockCoupons } from '@/mock/mockCoupons';
+import { Button, Modal, Typography, Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     const [searchQuery, setSearchQuery] = useState('');
@@ -52,7 +54,15 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
 
                         <div className="container mx-auto px-4 py-8">
                           <h1 className="text-3xl font-bold mb-6">クーポン一覧</h1> {/* remove extra space */}
-                          <SearchBar onSearch={setSearchQuery} />
+                          
+                          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                            <SearchBar onSearch={setSearchQuery} />
+                            <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => {
+                                router.push('./')
+                            }}>
+                              新規追加 
+                            </Button>
+                          </Box>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredCoupons.map((coupon) => (
                               <CouponCard key={coupon.id} coupon={coupon} />

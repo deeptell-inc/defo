@@ -4,6 +4,7 @@ import { Button, Modal, Typography, Box } from '@mui/material';
 import CouponCard from './CouponCard';
 import CouponForm from './CouponForm';
 import SearchBar from './SearchBar';
+import AddIcon from '@mui/icons-material/Add';
 
 const style = {
   position: 'absolute',
@@ -84,7 +85,12 @@ const CouponList = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         クーポン一覧
       </Typography>
-      <SearchBar onSearch={handleSearch} />
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <SearchBar onSearch={handleSearch} />
+        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => setIsModalOpen(true)}>
+          新規追加 
+        </Button>
+      </Box>
       <div className="flex justify-end mt-4">
         <Button variant="contained" color="primary" onClick={() => setIsModalOpen(true)}>
           クーポンを追加

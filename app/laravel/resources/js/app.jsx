@@ -4,6 +4,10 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; // BrowserRouter をインポート
+import { CssBaseline } from '@mui/material'; // CssBaseline をインポート
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -17,7 +21,14 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+          <BrowserRouter>
+            <CssBaseline />
+            <Routes>
+              <Route path="/" element={<App {...props} />} />
+            </Routes>
+          </BrowserRouter>
+        );
     },
     progress: {
         color: '#4B5563',
