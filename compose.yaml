@@ -24,16 +24,6 @@ services:
       - '8080:80'
     depends_on:
       - db
-  react-app:
-    build: ./docker/php
-    container_name: react-container
-    volumes:
-      - ./react-app:/var/www/react-app # Sync React source files
-    ports:
-      - '3000:3000' # Expose React app port
-    command: ["npm", "start"] # React app startup command
-    depends_on:
-      - app
   phpmyadmin:
     build: ./docker/phpmyadmin
     container_name: phpmyadmin-container
