@@ -26,14 +26,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// FPユーザー用のルート
-Route::prefix('fp_user')->group(function () {
-    Route::get('/login', [FpUserAuthController::class, 'showLoginForm'])->name('fp_user.login');
-    Route::post('/login', [FpUserAuthController::class, 'login']);
-    Route::middleware('auth:fp_user')->group(function () {
-        Route::get('/dashboard', [FpUserAuthController::class, 'dashboard'])->name('fp_user.dashboard');
-        Route::post('/logout', [FpUserAuthController::class, 'logout'])->name('fp_user.logout');
-    });
-});
+//// FPユーザー用のルート
+//Route::prefix('fp_user')->group(function () {
+//    Route::get('/login', [FpUserAuthController::class, 'showLoginForm'])->name('fp_user.login');
+//    Route::post('/login', [FpUserAuthController::class, 'login']);
+//    Route::middleware('auth:fp_user')->group(function () {
+//        Route::get('/dashboard', [FpUserAuthController::class, 'dashboard'])->name('fp_user.dashboard');
+//        Route::post('/logout', [FpUserAuthController::class, 'logout'])->name('fp_user.logout');
+//    });
+//});
 
 require __DIR__.'/auth.php';

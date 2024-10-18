@@ -49,13 +49,13 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    public function canAccessPanel(Panel $panel): bool
+    /**
+     * Filament管理画面へのアクセス権を確認するメソッド
+     */
+    public function canAccessPanel(\Filament\Panel $panel): bool
     {
-        if ($panel->getId() === config('filament.id')) {
-            return $this->type === 'admin';
-        }
-
-        return true;
+        // 'admin', 'fp_user', 'store' の場合にアクセスを許可
+        return in_array($this->type, ['admin', 'fp_user', 'store']);
     }
 
 }
