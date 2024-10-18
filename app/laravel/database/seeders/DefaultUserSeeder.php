@@ -17,9 +17,13 @@ class DefaultUserSeeder extends Seeder
     {
         User::create([
             'name' => '葬送のフリーレン',
-            'type' => 'fp_user',
+            'type' => 'admin',
             'email' => 'tankourou800@gmail.com',
-            'password' => Hash::make('Runrun831@'), // パスワードをハッシュ化
+            'password' => Hash::make('Runrun831@'),
+            'address' => '522-0002',
+            'region' => 'ヴァイゼ地方',
+            'phone_number' => '07043323039',
+            'status' => true,
         ]);
     }
 }

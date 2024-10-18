@@ -13,11 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('user');  // 'user' or 'admin' or 'fp_user' or 'store'
+            $table->string('type')->default('user');  // 'user' or 'admin' or 'fp' or 'merchant'
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('status')->default(true); // 管理者系はこちらのカラムで制限
+
+            // 追加カラム（nullableではなく必須項目として追加）
+            $table->string('address');
+            $table->string('region');
+            $table->string('phone_number');
+
             $table->rememberToken();
             $table->timestamps();
         });

@@ -23,7 +23,13 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-        'type', // これを追加
+        'type', // 追加
+        'status', // 追加
+
+        //追加
+        'address',
+        'region',
+        'phone_number',
     ];
 
     /**
@@ -46,6 +52,7 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status' => 'boolean', // 追加
         ];
     }
 
@@ -54,8 +61,8 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessPanel(\Filament\Panel $panel): bool
     {
-        // 'admin', 'fp_user', 'store' の場合にアクセスを許可
-        return in_array($this->type, ['admin', 'fp_user', 'store']);
+        // 'admin', 'fp', 'merchant' であり、statusがtrueの場合にアクセスを許可
+        return $this->status && in_array($this->type, ['admin', 'fp', 'merchant']);
     }
 
 }
