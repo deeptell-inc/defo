@@ -85,7 +85,14 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('type')
+                    ->options([
+                        'user' => 'User',
+                        'admin' => 'Admin',
+                        'fp' => 'FP',
+                        'merchant' => 'Merchant',
+                    ])
+                    ->label('ユーザータイプ'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
