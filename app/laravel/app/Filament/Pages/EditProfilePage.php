@@ -137,8 +137,8 @@ class EditProfilePage extends Page implements Forms\Contracts\HasForms
     }
 
     // ナビゲーションに表示しない場合はコメントアウト
-    // protected static function shouldRegisterNavigation(): bool
-    // {
-    //     return false;
-    // }
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 }
