@@ -20,13 +20,11 @@ class User extends Authenticatable implements FilamentUser
      * @var array<int, string>
      */
     protected $fillable = [
+        'type',
         'name',
         'email',
         'password',
-        'type', // 追加
-        'status', // 追加
-
-        //追加
+        'status',
         'address',
         'region',
         'phone_number',

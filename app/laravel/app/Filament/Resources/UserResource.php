@@ -9,7 +9,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
@@ -37,20 +36,18 @@ class UserResource extends Resource
                         'merchant' => 'Merchant',
                     ])
                     ->required(),
-                Forms\Components\TextInput::make('address')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('region')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('phone_number')
-                    ->tel()
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('status')
-                    ->required(),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
-                    ->dehydrated(fn ($state) => filled($state))
-                    ->required(fn (string $context): bool => $context === 'create'),
+                // `status` フィールドをフォームから削除
+                // Forms\Components\Toggle::make('status')
+                //     ->default(true),
+                // 不要なフィールドも削除
+                // Forms\Components\TextInput::make('address')
+                //     ->maxLength(255),
+                // Forms\Components\TextInput::make('region')
+                //     ->maxLength(255),
+                // Forms\Components\TextInput::make('phone_number')
+                //     ->tel()
+                //     ->maxLength(255),
+                // パスワードフィールドを削除
             ]);
     }
 
