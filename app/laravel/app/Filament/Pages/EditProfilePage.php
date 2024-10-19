@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
 use Illuminate\Validation\Rule;
+use App\Models\User;
 
 class EditProfilePage extends Page implements Forms\Contracts\HasForms
 {
@@ -51,7 +52,7 @@ class EditProfilePage extends Page implements Forms\Contracts\HasForms
 
         return [
             Forms\Components\TextInput::make('name')
-                ->label('名前')
+                ->label('名前/店舗名')
                 ->required()
                 ->maxLength(255),
             Forms\Components\TextInput::make('email')
@@ -61,7 +62,7 @@ class EditProfilePage extends Page implements Forms\Contracts\HasForms
                 ->maxLength(255)
                 ->unique('users', 'email', ignorable: Auth::user()),
             Forms\Components\TextInput::make('address')
-                ->label('住所')
+                ->label('住所(住民番号)')
                 ->maxLength(255),
             Forms\Components\TextInput::make('region')
                 ->label('地域')
@@ -93,10 +94,11 @@ class EditProfilePage extends Page implements Forms\Contracts\HasForms
 
     public function submit()
     {
-        $user = Auth::user();
+        $userId = Auth::id();
+        $user = User::find($userId); // ユーザーIDでユーザーを取得
 
         $data = $this->form->getState();
-
+    
         // 現在のパスワードの確認
         if (!empty($data['password'])) {
             if (!Hash::check($data['current_password'], $user->password)) {
@@ -104,27 +106,29 @@ class EditProfilePage extends Page implements Forms\Contracts\HasForms
                     ->title('現在のパスワードが正しくありません。')
                     ->danger()
                     ->send();
-
+    
                 return;
             }
         }
-
+    
         // パスワードの更新
         if (!empty($data['password'])) {
             $user->password = $data['password'];
         }
-
+    
         // 不要なフィールドを削除
         unset($data['current_password'], $data['password'], $data['password_confirmation']);
-
+    
         // その他のフィールドを更新
-        $user->update($data);
-
+        $user->fill($data);
+        $user->save();
+    
         Notification::make()
             ->title('プロフィールが更新されました。')
             ->success()
             ->send();
     }
+
 
     protected function getActions(): array
     {
