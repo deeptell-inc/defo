@@ -17,19 +17,20 @@ class CouponController extends Controller
     // クーポン作成
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'details' => 'required|string',
-            'code' => 'required|string|max:255|unique:coupons',
+            'code' => 'required|string|max:255|unique:coupons,code',
             'price' => 'required|numeric|min:0',
             'is_new' => 'required|boolean',
             'status' => 'required|in:unused,used',
         ]);
 
-        $coupon = Coupon::create($request->all());
+        $coupon = Coupon::create($validated);
+
         return response()->json($coupon, 201);
     }
-
+    
     // クーポン詳細取得
     public function show($id)
     {

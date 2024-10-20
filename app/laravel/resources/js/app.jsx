@@ -8,6 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'; // BrowserRouter をインポート
 import { CssBaseline } from '@mui/material'; // CssBaseline をインポート
+import CouponCreate from './Pages/CouponCreate';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -25,6 +26,7 @@ createInertiaApp({
             <CssBaseline />
             <Routes>
               <Route path="/" element={<App {...props} />} />
+              <Router path="/coupon/create" element={<CouponCreate />} />
             </Routes>
           </BrowserRouter>
         );
