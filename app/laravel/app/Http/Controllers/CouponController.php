@@ -10,7 +10,8 @@ class CouponController extends Controller
     // クーポン一覧取得
     public function index()
     {
-        return Coupon::all();
+        $coupons = Coupon::all();
+        return response()->json($coupons);
     }
 
     // クーポン作成
@@ -19,7 +20,7 @@ class CouponController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'details' => 'required|string',
-            'code' => 'required|string|max:255|unique:coupons',
+            'code' => 'required|string|max:255|unique:coupons,code',
             'price' => 'required|numeric|min:0',
             'is_new' => 'required|boolean',
             'status' => 'required|in:unused,used',
@@ -29,7 +30,7 @@ class CouponController extends Controller
 
         return response()->json($coupon, 201);
     }
-
+    
     // クーポン詳細取得
     public function show($id)
     {

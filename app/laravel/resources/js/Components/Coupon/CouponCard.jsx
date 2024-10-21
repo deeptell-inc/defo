@@ -1,8 +1,15 @@
 import React from 'react';
 import { Badge } from './ui/badge';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { CardFooter, CardHeader, CardTitle } from './ui/card';
+import {
+    Card,
+    CardContent,
+    CardActions,
+    Typography,
+    Button,
+  } from '@mui/material';
 
-const CouponCard = ({ coupon }) => {
+const CouponCard = ({ coupon, onEdit, onDelete }) => {
   const statusColor = {
     unused: 'bg-green-500',
     reserved: 'bg-yellow-500',
@@ -26,6 +33,14 @@ const CouponCard = ({ coupon }) => {
         </Badge>
         {coupon.isNew && <Badge className="bg-blue-500">新規</Badge>}
       </CardFooter>
+      <CardActions>
+        <Button size="small" onClick={onEdit}>
+          編集
+        </Button>
+        <Button size="small" onClick={onDelete}>
+          削除
+        </Button>
+      </CardActions>
     </Card>
   );
 };

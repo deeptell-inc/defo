@@ -4,7 +4,8 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { Switch } from './ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { generateCouponCode } from '../utils/couponUtils';
+import { generateCouponCode } from '../../Utils/CouponUtils'; 
+import axios from 'axios';
 
 const CouponForm = ({ coupon, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -36,14 +37,16 @@ const CouponForm = ({ coupon, onSubmit, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post('http://localhost:8000/api/coupons', formData);
-      console.log('Coupon created:', response.data);
+      const response = await axios.post('/api/coupons', formData); // APIエンドポイントにPOSTリクエスト
+      console.log('クーポンが作成されました:', response.data);
+      // フォームをリセットしたり、成功メッセージを表示したりする処理を追加
     } catch (error) {
-      console.error('Error creating coupon:', error);
+      console.error('クーポンの作成に失敗しました:', error);
+      // エラー処理を追加
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

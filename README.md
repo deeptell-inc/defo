@@ -1,8 +1,8 @@
-# Laravelの環境です。
+# Laravelの環境
 
 MySQLも入っていますが、いらないかもしれないです。
 
-〜手順〜
+＃〜手順〜
 
 cd app/laravel
 cp .env.example .env
@@ -16,7 +16,8 @@ cd ../..でルートに戻る
 docker exec -t -i <CONTAINER_ID> bash
 php artisan migrate --seed
 
-Internal Server Error
+## Internal Server Error
+
 UnexpectedValueException
 ↓
 権限周り
@@ -32,12 +33,20 @@ touch storage/logs/laravel.log
 chown www-data:www-data storage/logs/laravel.log
 chmod 644 storage/logs/laravel.log
 
-リセット
+## リセット
+
 docker ps -a
 docker rm もろもろ
+docker imageすべて削除コマンド
+{{ edit_1 }}
+```
+docker image ls -a
+docker rmi -f $(docker images -a -q)
+```
 docker compose up -d --build
 
-jsxでのvite build
+## jsxでのvite build
+
 npm install 
 
 ```
@@ -56,3 +65,17 @@ export default defineConfig({
     },
 });
 ```
+
+## ポート番号系
+
+sudo lsof -i :3306
+sudo kill -9
+
+WSLのmysqlが勝手に起動してた
+
+## nodeとnpmのインストール
+
+curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+apt-get install -y nodejs
+node -v
+npm -v
