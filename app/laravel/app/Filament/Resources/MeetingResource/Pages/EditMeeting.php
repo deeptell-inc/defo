@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Filament\Resources\MeetingResource\Pages;
+
+use App\Filament\Resources\MeetingResource;
+use App\Mail\MeetingDeleted;
+use Filament\Actions;
+use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
+class EditMeeting extends EditRecord
+{
+    protected static string $resource = MeetingResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\DeleteAction::make()
+                ->visible(fn () => Auth::user()->type === 'admin')
+                ->requiresConfirmation()
+                ->modalHeading('ミーティングの削除')
+                ->modalDescription('このミーティングを削除してもよろしいですか？FPに通知メールが送信されます。')
+                ->modalSubmitActionLabel('はい、削除します')
+                ->action(function () {
+                    $meeting = $this->getRecord();
+                    $fp = $meeting->fp;
+                    
+                    // トランザクション開始
+                    DB::beginTransaction();
+                    
+                    try {
+                        // ミーティングを強制削除（ハードデリート）
+                        $meeting->forceDelete();
+
+                        // トランザクションコミット
+                        DB::commit();
+
+                        // FPへメール送信
+                        if ($fp) {
+                            Mail::to($fp->email)->send(new MeetingDeleted($meeting));
+                        }
+
+                        return redirect()->to($this->getResource()::getUrl('index'));
+                    } catch (\Exception $e) {
+                        // えラー時はロールバック
+                        DB::rollBack();
+                        throw $e;
+                    }
+                }),
+        ];
+    }
+
+    public function beforeSave(): void
+    {
+        $user = Auth::user();
+        
+        if ($user->type === 'fp') {
+            abort_unless(
+                $this->getRecord()->status === 'pending',
+                403,
+                'ファイナンシャルプランナーは保留中のミーティングのみ編集できます。'
+            );
+        }
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function authorizeAccess(): void
+    {
+        parent::authorizeAccess();
+
+        $user = Auth::user();
+        $record = $this->getRecord();
+
+        abort_unless(
+            ($user->type === 'admin' && $record->admin_id === $user->id) ||
+            ($user->type === 'fp' && $record->fp_id === $user->id),
+            403,
+            'このミーティングを編集する権限がありません。'
+        );
+    }
+}

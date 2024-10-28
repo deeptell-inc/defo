@@ -15,8 +15,9 @@ class DefaultUserSeeder extends Seeder
      */
     public function run()
     {
+        // ユーザー1
         User::create([
-            'name' => '葬送のフリーレン',
+            'name' => '管理者のフリーレン',
             'type' => 'admin',
             'email' => 'tankourou800@gmail.com',
             'password' => Hash::make('Runrun831@'),
@@ -25,7 +26,41 @@ class DefaultUserSeeder extends Seeder
             'phone_number' => '07043323039',
             'status' => true,
         ]);
+
+        // ユーザー2
+        User::create([
+            'name' => '一般ユーザーのフリーレン',
+            'type' => '',
+            'email' => 'user@example.com',
+            'password' => Hash::make('Runrun831@'),
+            'address' => '522-0002',
+            'region' => 'ヴァイゼ地方',
+            'phone_number' => '07043323039',
+            'status' => true,
+        ]);
+
+        // ユーザー3
+        User::create([
+            'name' => 'FPのフリーレン',
+            'type' => '',
+            'email' => 'fp@example.com',
+            'password' => Hash::make('Runrun831@'),
+            'address' => '522-0002',
+            'region' => 'ヴァイゼ地方',
+            'phone_number' => '07043323039',
+            'status' => true,
+        ]);
+
+        // ユーザー4
+        User::create([
+            'name' => '加盟店のフリーレン',
+            'type' => '',
+            'email' => 'store@example.com',
+            'password' => Hash::make('Runrun831@'),
+            'address' => '522-0002',
+            'region' => 'ヴァイゼ地方',
+            'phone_number' => '07043323039',
+            'status' => true,
+        ]);
     }
 }
-
-
