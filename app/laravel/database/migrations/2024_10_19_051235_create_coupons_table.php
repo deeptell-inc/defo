@@ -11,10 +11,10 @@ return new class extends Migration
         // couponsテーブルを作成
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_public')->default(false);; // 公開されているかどうか
+            $table->boolean('is_public')->default(false); // 公開されているかどうか
 
-            // 外部キーはusersテーブルのidに関連付け
-            $table->foreignId('merchant_id')->constrained('users', 'id'); 
+            // 外部キーはusersテーブルのidに関連付け。削除時に連動してクーポンも削除
+            $table->foreignId('merchant_id')->constrained('users', 'id')->onDelete('cascade');
             $table->string('coupon_code', 50)->unique(); // ユニークなクーポンコード
             $table->string('image_path')->nullable(); // 画像のパス（任意）
             $table->boolean('is_new_customer'); // 新規顧客向けかどうか
@@ -36,11 +36,11 @@ return new class extends Migration
         Schema::create('coupon_usages', function (Blueprint $table) {
             $table->id();
 
-            // couponsテーブルのidを外部キーとして参照
-            $table->foreignId('coupon_id')->constrained('coupons')->onDelete('cascade'); 
+            // couponsテーブルのidを外部キーとして参照。クーポン削除時に関連レコードも削除
+            $table->foreignId('coupon_id')->constrained('coupons')->onDelete('cascade');
 
-            // usersテーブルのidを外部キーとして参照
-            $table->foreignId('user_id')->constrained('users', 'id'); 
+            // usersテーブルのidを外部キーとして参照。ユーザー削除時に関連レコードも削除
+            $table->foreignId('user_id')->constrained('users', 'id')->onDelete('cascade');
             $table->timestamp('used_at'); // クーポンが使用された日時
             $table->decimal('purchase_amount', 10, 2); // 購入金額
             $table->decimal('discount_amount', 10, 2); // 割引額
