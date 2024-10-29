@@ -20,14 +20,14 @@ Merchant -> System: 新規クーポンを作成
 System -> Database: クーポンテーブルに保存
 
 == 顧客がクーポンを取得 ==
-Customer -> System: ログイン
-System -> Database: 認証情報を確認
+Customer -> System: ユーザー登録/アンケート記入
+System -> Database: 顧客データにアンケートを統合保存
 System -> Customer: クーポン一覧を表示
 Customer -> System: クーポンを選択しコードを取得
 System -> Database: クーポン取得履歴を更新
 
 == クーポン利用 ==
-Customer -> Merchant: 店舗でクーポンコードを提示
+Customer -> Merchant: クーポンコードを提示（オンライン/オフライン）
 Merchant -> System: クーポンコードを確認
 System -> Database: クーポン使用履歴を更新
 Merchant -> Customer: サービス提供
