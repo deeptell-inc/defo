@@ -1,4 +1,5 @@
 <?php
+// database/migrations/2024_10_28_065440_create_meetings_table.php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -27,7 +28,6 @@ return new class extends Migration
             $table->foreignId('fp_id')
                   ->constrained('users')
                   ->where('type', 'fp');
-            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
 
@@ -35,7 +35,6 @@ return new class extends Migration
             $table->index('admin_id');
             $table->index('user_id');
             $table->index('fp_id');
-            $table->index('status');
         });
 
         Schema::create('meeting_dates', function (Blueprint $table) {
@@ -44,6 +43,7 @@ return new class extends Migration
                   ->constrained()
                   ->onDelete('cascade');
             $table->dateTime('proposed_datetime');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->boolean('is_selected')->default(false);
             $table->text('note')->nullable();
             $table->timestamps();
@@ -51,6 +51,7 @@ return new class extends Migration
             // インデックスの追加
             $table->index('meeting_id');
             $table->index('proposed_datetime');
+            $table->index('status');
             $table->index('is_selected');
         });
     }

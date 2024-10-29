@@ -1,5 +1,7 @@
 <?php
 
+// app/Filament/Resources/MeetingResource/Pages/EditMeeting.php
+
 namespace App\Filament\Resources\MeetingResource\Pages;
 
 use App\Filament\Resources\MeetingResource;
@@ -9,6 +11,7 @@ use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MeetingDate;
 
 class EditMeeting extends EditRecord
 {
@@ -27,24 +30,18 @@ class EditMeeting extends EditRecord
                     $meeting = $this->getRecord();
                     $fp = $meeting->fp;
                     
-                    // トランザクション開始
                     DB::beginTransaction();
                     
                     try {
-                        // ミーティングを強制削除（ハードデリート）
                         $meeting->forceDelete();
-
-                        // トランザクションコミット
                         DB::commit();
 
-                        // FPへメール送信
                         if ($fp) {
                             Mail::to($fp->email)->send(new MeetingDeleted($meeting));
                         }
 
                         return redirect()->to($this->getResource()::getUrl('index'));
                     } catch (\Exception $e) {
-                        // えラー時はロールバック
                         DB::rollBack();
                         throw $e;
                     }
@@ -58,9 +55,9 @@ class EditMeeting extends EditRecord
         
         if ($user->type === 'fp') {
             abort_unless(
-                $this->getRecord()->status === 'pending',
+                $this->getRecord()->dates()->where('status', MeetingDate::STATUS_PENDING)->exists(),
                 403,
-                'ファイナンシャルプランナーは保留中のミーティングのみ編集できます。'
+                'ファイナンシャルプランナーは保留中の日程があるミーティングのみ編集できます。'
             );
         }
     }

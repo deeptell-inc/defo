@@ -1,4 +1,5 @@
 <?php
+// app/Filament/Resources/MeetingResource/Pages/CreateMeeting.php
 
 namespace App\Filament\Resources\MeetingResource\Pages;
 
@@ -16,7 +17,6 @@ class CreateMeeting extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['admin_id'] = Auth::id();
-        $data['status'] = 'pending';
         return $data;
     }
 

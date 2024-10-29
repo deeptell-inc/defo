@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 
+// 追加
+use Illuminate\Database\Eloquent\Builder;
+
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -72,44 +75,101 @@ class User extends Authenticatable implements FilamentUser
 
 
 
+
+
     /**
- * 管理者として作成したミーティング
- */
-public function adminMeetings(): HasMany
-{
-    return $this->hasMany(Meeting::class, 'admin_id');
-}
-
-/**
- * ユーザーとして参加するミーティング
- */
-public function userMeetings(): HasMany
-{
-    return $this->hasMany(Meeting::class, 'user_id');
-}
-
-/**
- * FPとして参加するミーティング
- */
-public function fpMeetings(): HasMany
-{
-    return $this->hasMany(Meeting::class, 'fp_id');
-}
-
-/**
- * ユーザーの種類に応じたミーティングを取得
- */
-public function meetings(): HasMany
-{
-    switch ($this->type) {
-        case 'admin':
-            return $this->adminMeetings();
-        case 'user':
-            return $this->userMeetings();
-        case 'fp':
-            return $this->fpMeetings();
-        default:
-            return $this->hasMany(Meeting::class, 'user_id')->whereNull('id');
+     * 管理者として作成したミーティング
+     */
+    public function adminMeetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class, 'admin_id');
     }
-}
+
+    /**
+     * ユーザーとして参加するミーティング
+     */
+    public function userMeetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class, 'user_id');
+    }
+
+    /**
+     * FPとして参加するミーティング
+     */
+    public function fpMeetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class, 'fp_id');
+    }
+
+    /**
+     * ユーザーの種類に応じたミーティングを取得
+     */
+    public function meetings(): HasMany
+    {
+        switch ($this->type) {
+            case 'admin':
+                return $this->adminMeetings();
+            case 'user':
+                return $this->userMeetings();
+            case 'fp':
+                return $this->fpMeetings();
+            default:
+                return $this->hasMany(Meeting::class, 'user_id')->whereNull('id');
+        }
+    }
+
+    /**
+     * 確定した日程があるミーティングを取得
+     */
+    public function confirmedMeetings(): Builder
+    {
+        return $this->meetings()
+            ->whereHas('dates', function ($query) {
+                $query->where('status', MeetingDate::STATUS_CONFIRMED)
+                    ->where('is_selected', true);
+            });
+    }
+
+    /**
+     * 保留中の日程があるミーティングを取得
+     */
+    public function pendingMeetings(): Builder
+    {
+        return $this->meetings()
+            ->whereHas('dates', function ($query) {
+                $query->where('status', MeetingDate::STATUS_PENDING);
+            })
+            ->whereDoesntHave('dates', function ($query) {
+                $query->where('status', MeetingDate::STATUS_CONFIRMED)
+                    ->where('is_selected', true);
+            });
+    }
+
+    /**
+     * すべての日程がキャンセルされたミーティングを取得
+     */
+    public function cancelledMeetings(): Builder
+    {
+        return $this->meetings()
+            ->whereDoesntHave('dates', function ($query) {
+                $query->whereIn('status', [
+                    MeetingDate::STATUS_CONFIRMED,
+                    MeetingDate::STATUS_PENDING
+                ]);
+            })
+            ->whereHas('dates', function ($query) {
+                $query->where('status', MeetingDate::STATUS_CANCELLED);
+            });
+    }
+
+    /**
+     * 特定の日付範囲のミーティングを取得
+     */
+    public function meetingsInDateRange($startDate, $endDate): Builder
+    {
+        return $this->meetings()
+            ->whereHas('dates', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('proposed_datetime', [$startDate, $endDate]);
+            });
+    }
 }

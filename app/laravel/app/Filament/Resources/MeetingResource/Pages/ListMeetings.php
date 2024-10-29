@@ -17,7 +17,7 @@ class ListMeetings extends ListRecords
         return [
             Actions\CreateAction::make()
                 ->visible(fn () => Auth::user()->type === 'admin')
-                ->label('New Meeting')
+                ->label('新規ミーティング')
                 ->icon('heroicon-o-plus'),
         ];
     }
@@ -25,23 +25,23 @@ class ListMeetings extends ListRecords
     protected function getTableHeading(): ?string
     {
         return match (Auth::user()->type) {
-            'admin' => 'Your Created Meetings',
-            'fp' => 'Your Assigned Meetings',
-            default => 'Meetings',
+            'admin' => '作成したミーティング',
+            'fp' => '担当するミーティング',
+            default => 'ミーティング一覧',
         };
     }
 
     protected function getTableEmptyStateHeading(): string
     {
-        return 'No meetings found';
+        return 'ミーティングが見つかりません';
     }
 
     protected function getTableEmptyStateDescription(): ?string
     {
         return match (Auth::user()->type) {
-            'admin' => 'Create a meeting to get started.',
-            'fp' => 'No meetings have been assigned to you yet.',
-            default => 'No meetings are available.',
+            'admin' => 'ミーティングを作成してください。',
+            'fp' => 'まだミーティングが割り当てられていません。',
+            default => 'ミーティングはありません。',
         };
     }
 
@@ -69,16 +69,5 @@ class ListMeetings extends ListRecords
     protected function getTableQuery(): Builder
     {
         return parent::getTableQuery()->with(['user', 'fp']);
-    }
-
-    protected function authorizeAccess(): void
-    {
-        parent::authorizeAccess();
-
-        abort_if(
-            in_array(Auth::user()->type, ['merchant', 'fp']),
-            403,
-            'You are not authorized to access meetings.'
-        );
     }
 }

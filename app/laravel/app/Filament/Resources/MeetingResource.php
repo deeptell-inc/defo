@@ -1,10 +1,12 @@
 <?php
+// app/Filament/Resources/MeetingResource.php
 
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MeetingResource\Pages;
 use App\Models\Meeting;
 use App\Models\User;
+use App\Models\MeetingDate;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -115,6 +117,26 @@ class MeetingResource extends Resource
                                 ->timezone('Asia/Tokyo')
                                 ->displayFormat('Y/m/d H:i')
                                 ->columnSpan(1),
+                            Forms\Components\Select::make('status')
+                                ->label('ステータス')
+                                ->options([
+                                    MeetingDate::STATUS_PENDING => '保留中',
+                                    MeetingDate::STATUS_CONFIRMED => '確定',
+                                    MeetingDate::STATUS_CANCELLED => 'キャンセル'
+                                ])
+                                ->default(MeetingDate::STATUS_PENDING)
+                                ->reactive()
+                                ->afterStateUpdated(function ($state, callable $set) {
+                                    if ($state === MeetingDate::STATUS_CONFIRMED) {
+                                        $set('is_selected', true);
+                                    } else {
+                                        $set('is_selected', false);
+                                    }
+                                })
+                                ->visible(fn () => Auth::user()->type === 'fp')
+                                ->columnSpan(1),
+                            Forms\Components\Hidden::make('is_selected')
+                                ->default(false),
                             Forms\Components\Textarea::make('note')
                                 ->label('メモ')
                                 ->maxLength(65535)
@@ -158,12 +180,36 @@ class MeetingResource extends Resource
                         });
                     }),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('ステータス')
+                    ->label('日程ステータス')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'pending' => 'warning',
-                        'confirmed' => 'success',
-                        'cancelled' => 'danger',
+                    ->color(function (string $state) {
+                        return match ($state) {
+                            'confirmed' => 'success',
+                            'pending' => 'warning',
+                            'cancelled' => 'danger',
+                            default => 'secondary',
+                        };
+                    })
+                    ->getStateUsing(function (Meeting $record) {
+                        $confirmedDate = $record->confirmedDate();
+                        if ($confirmedDate) {
+                            return 'confirmed';
+                        }
+                        $hasPending = $record->dates()->where('status', MeetingDate::STATUS_PENDING)->exists();
+                        if ($hasPending) {
+                            return 'pending';
+                        }
+                        return 'cancelled';
+                    })
+                    ->formatStateUsing(function (string $state, Meeting $record) {
+                        if ($state === 'confirmed') {
+                            $confirmedDate = $record->confirmedDate();
+                            return '確定: ' . $confirmedDate->proposed_datetime->format('Y/m/d H:i');
+                        } elseif ($state === 'pending') {
+                            return "保留中";
+                        } else {
+                            return 'すべてキャンセル';
+                        }
                     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('作成日')
@@ -171,20 +217,39 @@ class MeetingResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
+                Tables\Filters\SelectFilter::make('meeting_status')
                     ->label('ステータス')
                     ->options([
+                        'confirmed' => '確定済み',
                         'pending' => '保留中',
-                        'confirmed' => '確認済み',
-                        'cancelled' => 'キャンセル済み',
-                    ]),
+                        'cancelled' => 'すべてキャンセル',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if (!$data['value']) {
+                            return $query;
+                        }
+                        
+                        return match ($data['value']) {
+                            'confirmed' => $query->whereHas('dates', fn ($q) => 
+                                $q->where('status', MeetingDate::STATUS_CONFIRMED)
+                                  ->where('is_selected', true)
+                            ),
+                            'pending' => $query->whereHas('dates', fn ($q) => 
+                                $q->where('status', MeetingDate::STATUS_PENDING)
+                            ),
+                            'cancelled' => $query->whereDoesntHave('dates', fn ($q) => 
+                                $q->whereIn('status', [MeetingDate::STATUS_CONFIRMED, MeetingDate::STATUS_PENDING])
+                            ),
+                            default => $query,
+                        };
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->label('編集')
                     ->visible(fn (Meeting $record) => 
                         (Auth::user()->type === 'admin') || 
-                        (Auth::user()->type === 'fp' && $record->status === 'pending')
+                        (Auth::user()->type === 'fp' && $record->dates()->where('status', MeetingDate::STATUS_PENDING)->exists())
                     ),
                 Tables\Actions\DeleteAction::make()
                     ->label('削除')
@@ -196,22 +261,16 @@ class MeetingResource extends Resource
                     ->action(function (Meeting $record) {
                         $fp = $record->fp;
                         
-                        // トランザクション開始
                         DB::beginTransaction();
                         
                         try {
-                            // ミーティングを強制削除（ハードデリート）
                             $record->forceDelete();
-
-                            // トランザクションコミット
                             DB::commit();
 
-                            // FPへメール送信
                             if ($fp) {
                                 Mail::to($fp->email)->send(new MeetingDeleted($record));
                             }
                         } catch (\Exception $e) {
-                            // エラー時はロールバック
                             DB::rollBack();
                             throw $e;
                         }
@@ -226,26 +285,20 @@ class MeetingResource extends Resource
                         ->modalDescription('選択したミーティング提案を削除してもよろしいですか？各FPに通知メールが送信されます。')
                         ->modalSubmitActionLabel('はい、すべて削除します')
                         ->action(function (Collection $records) {
-                            // トランザクション開始
                             DB::beginTransaction();
                             
                             try {
                                 $records->each(function ($record) {
                                     $fp = $record->fp;
-                                    
-                                    // ミーティングを強制削除（ハードデリート）
                                     $record->forceDelete();
 
-                                    // FPへメール送信
                                     if ($fp) {
                                         Mail::to($fp->email)->send(new MeetingDeleted($record));
                                     }
                                 });
 
-                                // トランザクションコミット
                                 DB::commit();
                             } catch (\Exception $e) {
-                                // エラー時はロールバック
                                 DB::rollBack();
                                 throw $e;
                             }
