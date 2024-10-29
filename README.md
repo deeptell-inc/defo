@@ -47,7 +47,8 @@ docker compose up -d --build
 
 ## jsxでのvite build
 
-npm install 
+npm run build
+npm install
 
 ```
 export default defineConfig({
