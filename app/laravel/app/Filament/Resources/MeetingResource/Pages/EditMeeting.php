@@ -33,7 +33,7 @@ class EditMeeting extends EditRecord
                     DB::beginTransaction();
                     
                     try {
-                        $meeting->forceDelete();
+                        $meeting->delete();
                         DB::commit();
 
                         if ($fp) {

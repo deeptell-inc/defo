@@ -41,12 +41,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('meeting_id')
                   ->constrained()
-                  ->onDelete('cascade');
+                  // ->onDelete('cascade') // この行をコメントアウトまたは削除
+                  ->onDelete('restrict'); // 代わりに制限を設定（オプション）
             $table->dateTime('proposed_datetime');
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->boolean('is_selected')->default(false);
             $table->text('note')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             // インデックスの追加
             $table->index('meeting_id');

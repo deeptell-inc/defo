@@ -30,7 +30,7 @@ class DefaultUserSeeder extends Seeder
         // ユーザー2
         User::create([
             'name' => '一般ユーザーのフリーレン',
-            'type' => '',
+            'type' => 'user',
             'email' => 'user@example.com',
             'password' => Hash::make('Runrun831@'),
             'address' => '522-0002',
@@ -42,7 +42,7 @@ class DefaultUserSeeder extends Seeder
         // ユーザー3
         User::create([
             'name' => 'FPのフリーレン',
-            'type' => '',
+            'type' => 'fp',
             'email' => 'fp@example.com',
             'password' => Hash::make('Runrun831@'),
             'address' => '522-0002',
@@ -54,7 +54,7 @@ class DefaultUserSeeder extends Seeder
         // ユーザー4
         User::create([
             'name' => '加盟店のフリーレン',
-            'type' => '',
+            'type' => 'merchant',
             'email' => 'store@example.com',
             'password' => Hash::make('Runrun831@'),
             'address' => '522-0002',

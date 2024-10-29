@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+
+
 
 class Meeting extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -25,20 +27,19 @@ class Meeting extends Model
     ];
 
     /**
-     * モデルが削除されるときに関連するデータも削除
+     * ミーティングに関連する日程
      */
-    protected static function boot()
+    public function dates()
     {
-        parent::boot();
+        return $this->hasMany(MeetingDate::class);
+    }
 
-        static::deleting(function ($meeting) {
-            // forceDeleteの場合、関連データも完全に削除されます
-            if ($meeting->isForceDeleting()) {
-                $meeting->dates()->forceDelete();
-            } else {
-                $meeting->dates()->delete();
-            }
-        });
+    /**
+     * 確定済みの日程を取得
+     */
+    public function confirmedDate()
+    {
+        return $this->dates()->where('status', 'confirmed')->first();
     }
 
     /**
@@ -66,25 +67,6 @@ class Meeting extends Model
     }
 
     /**
-     * Get the dates for the meeting.
-     */
-    public function dates(): HasMany
-    {
-        return $this->hasMany(MeetingDate::class);
-    }
-
-    /**
-     * Get the confirmed date for the meeting.
-     */
-    public function confirmedDate()
-    {
-        return $this->dates()
-            ->where('status', MeetingDate::STATUS_CONFIRMED)
-            ->where('is_selected', true)
-            ->first();
-    }
-
-    /**
      * Get all pending dates for the meeting.
      */
     public function pendingDates()
@@ -102,5 +84,28 @@ class Meeting extends Model
         return $this->dates()
             ->where('status', MeetingDate::STATUS_CANCELLED)
             ->get();
+    }
+
+    /**
+     * モデルイベントのブートメソッド
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($meeting) {
+            if ($meeting->isForceDeleting()) {
+                // 物理削除の場合、関連日程も物理削除
+                $meeting->dates()->forceDelete();
+            } else {
+                // 論理削除の場合、関連日程も論理削除
+                $meeting->dates()->delete();
+            }
+        });
+
+        static::restoring(function ($meeting) {
+            // ミーティングの復元時に関連日程も復元
+            $meeting->dates()->withTrashed()->restore();
+        });
     }
 }

@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MeetingDate extends Model
 {
+    use HasFactory, SoftDeletes;
+
     /**
      * Status constants
      */
@@ -41,7 +44,7 @@ class MeetingDate extends Model
     /**
      * Get the meeting that owns the date.
      */
-    public function meeting(): BelongsTo
+    public function meeting()
     {
         return $this->belongsTo(Meeting::class);
     }
@@ -77,5 +80,34 @@ class MeetingDate extends Model
             'status' => self::STATUS_PENDING,
             'is_selected' => false
         ]);
+    }
+
+    /**
+     * モデルイベントのブートメソッド
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // `status` が `confirmed` に更新された後の処理
+        static::updated(function ($meetingDate) {
+            if ($meetingDate->isDirty('status') && $meetingDate->status === 'confirmed') {
+                // 同じミーティングに属する他の日程を論理削除
+                $meetingDate->meeting->dates()
+                    ->where('id', '<>', $meetingDate->id)
+                    ->delete();
+            }
+        });
+
+        // ミーティングがソフトデリートされた際に関連する日程もソフトデリート
+        static::deleting(function ($meetingDate) {
+            if ($meetingDate->isForceDeleting()) {
+                // 物理削除の場合は何もしない
+                return;
+            }
+
+            // 関連する日程もソフトデリート
+            $meetingDate->meetings->dates()->delete();
+        });
     }
 }
