@@ -27,6 +27,14 @@ class MeetingResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
     protected static ?string $navigationGroup = 'Meeting Management';
 
+    public static function before($request)
+    {
+        if (in_array(Auth::user()->type, ['merchant', 'fp'])) {
+        //if (in_array(Auth::user()->type, ['merchant', 'fp'])) {
+            abort(403, 'このリソースへのアクセスは許可されていません。');
+        }
+    }
+
     public static function shouldRegisterNavigation(): bool
     {
         return !in_array(Auth::user()->type, ['merchant', 'fp']);
