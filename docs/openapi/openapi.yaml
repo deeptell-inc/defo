@@ -1,0 +1,172 @@
+openapi: 3.0.3
+info:
+  title: システムAPI
+  description: クーポン、顧客、加盟店、FP管理のためのAPI
+  version: 1.0.0
+servers:
+  - url: https://gozigen.com/wp/
+    description: 本番環境
+  - url: https://gozigen-coupon.com
+    description: 検証環境
+
+paths:
+  /login:
+    post:
+      summary: 共通ログイン画面
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: ログイン成功
+        '401':
+          description: 認証失敗
+
+  /customers:
+    get:
+      summary: 顧客一覧の取得
+      responses:
+        '200':
+          description: 顧客一覧を返す
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+
+  /customers/register:
+    post:
+      summary: 顧客新規登録画面
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '201':
+          description: 顧客登録完了
+
+  /coupons:
+    get:
+      summary: クーポン一覧取得（加盟店側）
+      responses:
+        '200':
+          description: クーポン一覧を返す
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coupon'
+
+  /coupons/create:
+    post:
+      summary: 新規クーポンの登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                expiryDate:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: クーポン作成成功
+
+  /fp/schedule:
+    post:
+      summary: FPの面談候補日登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date-time
+                fpId:
+                  type: integer
+      responses:
+        '201':
+          description: 面談候補日登録成功
+
+  /admin/approve:
+    post:
+      summary: 管理者によるFP・加盟店の承認
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                status:
+                  type: string
+                  enum: [approved, rejected]
+      responses:
+        '200':
+          description: ステータス更新成功
+
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+
+    Coupon:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        expiryDate:
+          type: string
+          format: date-time
+
+    FP:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    Schedule:
+      type: object
+      properties:
+        fpId:
+          type: integer
+        date:
+          type: string
+          format: date-time
