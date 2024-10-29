@@ -43,7 +43,7 @@ class DefaultUserSeeder extends Seeder
         User::create([
             'name' => 'FPのフリーレン',
             'type' => 'fp',
-            'email' => 'fp@example.com',
+            'email' => 'tankourou@icloud.com',
             'password' => Hash::make('Runrun831@'),
             'address' => '522-0002',
             'region' => 'ヴァイゼ地方',
