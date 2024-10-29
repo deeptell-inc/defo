@@ -27,6 +27,10 @@ paths:
       responses:
         '200':
           description: ログイン成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '401':
           description: 認証失敗
 
@@ -41,7 +45,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Customer'
+                  $ref: '#/components/schemas/User'
 
   /customers/register:
     post:
@@ -51,15 +55,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
+              $ref: '#/components/schemas/User'
       responses:
         '201':
           description: 顧客登録完了
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
 
   /coupons:
     get:
@@ -82,16 +85,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                description:
-                  type: string
-                expiryDate:
-                  type: string
-                  format: date-time
+              $ref: '#/components/schemas/Coupon'
       responses:
         '201':
           description: クーポン作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon'
 
   /fp/schedule:
     post:
@@ -101,16 +102,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                date:
-                  type: string
-                  format: date-time
-                fpId:
-                  type: integer
+              $ref: '#/components/schemas/FinancialPlanner'
       responses:
         '201':
           description: 面談候補日登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialPlanner'
 
   /admin/approve:
     post:
@@ -133,40 +132,197 @@ paths:
 
 components:
   schemas:
-    Customer:
+    User:
       type: object
       properties:
         id:
           type: integer
+        type:
+          type: string
+          enum: [user, admin, fp, merchant]
+          default: user
         name:
           type: string
         email:
           type: string
+        email_verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        password:
+          type: string
+        status:
+          type: boolean
+          default: true
+        address:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        phone_number:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
 
     Coupon:
       type: object
       properties:
         id:
           type: integer
-        description:
+        merchant_id:
+          type: integer
+        coupon_code:
           type: string
-        expiryDate:
+          maxLength: 50
+        image_path:
+          type: string
+          nullable: true
+        is_new_customer:
+          type: boolean
+        coupon_title:
+          type: string
+          maxLength: 100
+        coupon_description:
+          type: string
+        contact_info:
+          type: string
+          nullable: true
+        website_urls:
+          type: array
+          items:
+            type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        now_usage:
+          type: integer
+          nullable: true
+        usage_limit:
+          type: integer
+          nullable: true
+        discount_type:
+          type: string
+          enum: [percentage, fixed_amount, free_item]
+        discount_value:
+          type: number
+          format: float
+        minimum_purchase:
+          type: number
+          format: float
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
           type: string
           format: date-time
 
-    FP:
+    CouponUsage:
       type: object
       properties:
         id:
           type: integer
-        name:
-          type: string
-
-    Schedule:
-      type: object
-      properties:
-        fpId:
+        coupon_id:
           type: integer
-        date:
+        user_id:
+          type: integer
+        used_at:
           type: string
           format: date-time
+        purchase_amount:
+          type: number
+          format: float
+        discount_amount:
+          type: number
+          format: float
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    FinancialPlanner:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        qualifications:
+          type: string
+        available_dates:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Meeting:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        admin_id:
+          type: integer
+        user_id:
+          type: integer
+        fp_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MeetingDate:
+      type: object
+      properties:
+        id:
+          type: integer
+        meeting_id:
+          type: integer
+        proposed_datetime:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, confirmed, cancelled]
+          default: pending
+        is_selected:
+          type: boolean
+          default: false
+        note:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
