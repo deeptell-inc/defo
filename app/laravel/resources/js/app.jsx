@@ -26,7 +26,7 @@ createInertiaApp({
             <CssBaseline />
             <Routes>
               <Route path="/" element={<App {...props} />} />
-              <Router path="/coupon/create" element={<CouponCreate />} />
+              <Route path="/coupon/create" element={<CouponCreate />} />
             </Routes>
           </BrowserRouter>
         );
