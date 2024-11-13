@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { Textarea } from './ui/textarea';
-import { Switch } from './ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { generateCouponCode } from '../../Utils/CouponUtils'; 
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
+import { Textarea } from '@/Components/ui/textarea';
+import { Switch } from '@/Components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
+import { generateCouponCode } from '@/Utils/CouponUtils'; 
 import axios from 'axios';
 
 const CouponForm = ({ coupon, onSubmit, onCancel }) => {

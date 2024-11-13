@@ -65,18 +65,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->status && in_array($this->type, ['admin', 'fp', 'merchant']);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 管理者として作成したミーティング
      */
@@ -172,4 +160,11 @@ class User extends Authenticatable implements FilamentUser
                 $query->whereBetween('proposed_datetime', [$startDate, $endDate]);
             });
     }
+
+    // Function to check user type
+    public function isType($type)
+    {
+        return $this->type === $type;
+    }
 }
+
