@@ -30,12 +30,9 @@ Route::middleware('api')->get('/sample', function () {
     return response()->json(['message' => 'This is a sample response']);
 });
 
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
 
 Route::apiResource('coupons', CouponController::class);
 Route::apiResource('meetings', MeetingController::class);
