@@ -29,25 +29,3 @@ Route::get('sample', function () {
 Route::middleware('api')->get('/sample', function () {
     return response()->json(['message' => 'This is a sample response']);
 });
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::apiResource('coupons', CouponController::class);
-Route::apiResource('meetings', MeetingController::class);
-Route::post('meeting_dates', [MeetingDateController::class, 'store']);
-Route::post('meetings/{id}/confirm', [MeetingController::class, 'confirmMeetingDate']);
-Route::post('register', [UserController::class, 'register']);
-Route::post('login', [UserController::class, 'login']);
-Route::post('submit-survey', [SurveyController::class, 'submit']);
-Route::post('/register', [RegisteredUserController::class, 'store']);
-
-// Matching routes
-Route::patch('/matchings/{id}/approve-user', [MatchingController::class, 'approveUser']);
-Route::patch('/matchings/{id}/approve-fp', [MatchingController::class, 'approveFp']);
-Route::patch('/matchings/{id}/approve-admin', [MatchingController::class, 'approveAdmin']);
-Route::get('/matchings/{id}', [MatchingController::class, 'show']);
-
-// FpSurvey routes
-Route::post('/fp-surveys', [FpSurveyController::class, 'store']);

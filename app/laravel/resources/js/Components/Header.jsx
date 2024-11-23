@@ -26,8 +26,8 @@ const Header = () => {
             className="text-text hover:text-primary transition-colors">
             お問い合わせ
           </a>
-          <a href="/admin/login" target="_blank" rel="noopener noreferrer" className="text-text hover:text-primary transition-colors">
-            管理者はこちら
+          <a href="/login" target="_blank" rel="noopener noreferrer" className="text-text hover:text-primary transition-colors">
+            ログイン
           </a>
         </nav>
       </div>

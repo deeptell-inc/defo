@@ -1,7 +1,7 @@
 import '../css/app.css';
 import '../css/index.css';
 import './bootstrap';
-
+import axios from 'axios';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
@@ -14,7 +14,17 @@ import StoreDetail from "./Pages/StoreDetail";
 import Admin from "./Pages/Admin";
 import Survey from "./Pages/Survey";
 
+axios.defaults.baseURL = '/api';
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+// CSRFトークンの設定（必要に応じて）
+const token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+}
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -37,7 +47,6 @@ createInertiaApp({
                 <Route path="/admin/customers" element={<Admin.Customers />} />
                 <Route path="/admin/coupons" element={<Admin.Coupons.CouponList />} />
                 <Route path="/admin/coupons/create" element={<Admin.Coupons.CouponCreate />} /> */}
-                <Route path="*" element={<Index />} />
             </Routes>
           </BrowserRouter>
         );
