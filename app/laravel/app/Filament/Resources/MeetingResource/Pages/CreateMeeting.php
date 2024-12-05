@@ -41,4 +41,14 @@ class CreateMeeting extends CreateRecord
             Mail::to($fp->email)->send(new MeetingCreated($this->record));
         }
     }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'ミーティングを作成しました';
+    }
+
+    protected function getCreatedNotificationMessage(): ?string
+    {
+        return "{$this->record->title}のミーティングが作成されました。";
+    }
 }

@@ -20,6 +20,9 @@ class CouponResource extends Resource
     protected static ?string $model = Coupon::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
+    protected static ?string $navigationLabel = 'クーポン管理';
+    protected static ?string $modelLabel = 'クーポン';
+    protected static ?string $pluralModelLabel = 'クーポン一覧';
 
     public static function form(Form $form): Form
     {
@@ -101,11 +104,23 @@ class CouponResource extends Resource
                         ->directory('coupons')
                         ->visibility('public')
                         ->label('クーポン画像'),
+                    Forms\Components\TextInput::make('industry')
+                        ->label('業種')
+                        ->placeholder('例: 小売業'),
+                    Forms\Components\Select::make('region')
+                        ->options([
+                            '関西' => '関西',
+                            '関東' => '関東',
+                            '東海' => '東海',
+                        ])
+                        ->label('地域の大分類'),
+                    Forms\Components\TextInput::make('prefecture')
+                        ->label('都道府県')
+                        ->placeholder('例: 大阪府'),
                     Forms\Components\Repeater::make('website_urls')
                         ->schema([
                             Forms\Components\TextInput::make('url')
                                 ->url()
-                                // ->required() // 任意項目？？
                                 ->label('ウェブサイトURL')
                                 ->placeholder('例: https://example.com'),
                         ])
@@ -149,7 +164,7 @@ class CouponResource extends Resource
                 ->trueColor('success')
                 ->falseColor('danger'),
         ])->filters([
-            // フィルターを追加する場合はここに記述
+            // フィルターを追加す場合はここに記述
         ])->actions([
             Tables\Actions\EditAction::make(),
             Action::make('toggle_public')
@@ -194,5 +209,10 @@ class CouponResource extends Resource
     public static function canViewAny(): bool
     {
         return in_array(Auth::user()->type, ['admin', 'merchant']);
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return '管理メニュー';
     }
 }

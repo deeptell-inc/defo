@@ -16,8 +16,7 @@ class ListMeetings extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->visible(fn () => Auth::user()->type === 'admin')
-                ->label('新規ミーティング')
+                ->label('新規ミーティング作成')
                 ->icon('heroicon-o-plus'),
         ];
     }
@@ -33,15 +32,15 @@ class ListMeetings extends ListRecords
 
     protected function getTableEmptyStateHeading(): string
     {
-        return 'ミーティングが見つかりません';
+        return 'ミーティングがありません';
     }
 
     protected function getTableEmptyStateDescription(): ?string
     {
         return match (Auth::user()->type) {
-            'admin' => 'ミーティングを作成してください。',
-            'fp' => 'まだミーティングが割り当てられていません。',
-            default => 'ミーティングはありません。',
+            'admin' => '新規ミーティングを作成してください。',
+            'fp' => '担当するミーティングはまだありません。',
+            default => 'ミーティングは登録されていません。',
         };
     }
 

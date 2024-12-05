@@ -29,7 +29,13 @@ return new class extends Migration
             $table->enum('discount_type', ['percentage', 'fixed_amount', 'free_item']); // 割引の種類
             $table->decimal('discount_value', 10, 2); // 割引の値
             $table->decimal('minimum_purchase', 10, 2)->nullable(); // 最低購入額（任意）
+            
             $table->timestamps(); // 作成日時と更新日時
+
+            //追加
+            $table->string('industry', 100); // クーポンの業種
+            $table->enum('region', ['関西', '関東', '東海']); // 地域の大分類
+            $table->string('prefecture', 100); // 都道府県
         });
 
         // coupon_usagesテーブルを作成

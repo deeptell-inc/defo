@@ -28,6 +28,10 @@ class EditProfilePage extends Page implements Forms\Contracts\HasForms
     public $current_password;
     public $password;
     public $password_confirmation;
+    public $contact_person_name;
+    public $contact_person_phone;
+    public $contact_person_email;
+    public $position;
 
     public function mount()
     {
@@ -38,11 +42,15 @@ class EditProfilePage extends Page implements Forms\Contracts\HasForms
         }
 
         $this->form->fill([
-            'name'         => $user->name,
-            'email'        => $user->email,
-            'address'      => $user->address,
-            'region'       => $user->region,
-            'phone_number' => $user->phone_number,
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'address'               => $user->address,
+            'region'                => $user->region,
+            'phone_number'          => $user->phone_number,
+            'contact_person_name'   => $user->contact_person_name,
+            'contact_person_phone'  => $user->contact_person_phone,
+            'contact_person_email'  => $user->contact_person_email,
+            'position'              => $user->position,
         ]);
     }
 
@@ -71,6 +79,23 @@ class EditProfilePage extends Page implements Forms\Contracts\HasForms
                 ->label('電話番号')
                 ->tel()
                 ->maxLength(255),
+            Forms\Components\Fieldset::make('任意情報')
+                ->schema([
+                    Forms\Components\TextInput::make('contact_person_name')
+                        ->label('担当者者指名')
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('contact_person_phone')
+                        ->label('担当者の電話番号')
+                        ->tel()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('contact_person_email')
+                        ->label('担当者のメールアドレス')
+                        ->email()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('position')
+                        ->label('役職')
+                        ->maxLength(255),
+                ]),
             Forms\Components\Fieldset::make('パスワード変更')
                 ->schema([
                     Forms\Components\TextInput::make('current_password')

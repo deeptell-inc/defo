@@ -27,6 +27,10 @@ class Coupon extends Model
         'discount_type', // 割引の種類（例: percentage, fixed_amount, free_item）
         'discount_value', // 割引の値
         'minimum_purchase', // 最低購入額（任意）
+        //　追加
+        'industry', // クーポンの業種
+        'region', // 地域の大分類
+        'prefecture', // 都道府県
     ];
 
     protected $casts = [

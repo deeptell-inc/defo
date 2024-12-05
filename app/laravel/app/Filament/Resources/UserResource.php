@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Filament\Tables\Actions\Action;
 
 class UserResource extends Resource
 {
@@ -85,6 +86,28 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\IconColumn::make('memo')
+                    ->label('メモ')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-document-text')
+                    ->falseIcon('heroicon-o-document')
+                    ->getStateUsing(fn (User $record): bool => !empty($record->memo))
+                    ->action(
+                        Action::make('memo')
+                            ->icon('heroicon-o-pencil-square')
+                            ->modalHeading('メモ編集')
+                            ->form([
+                                Forms\Components\Textarea::make('memo')
+                                    ->label('メモ')
+                                    ->rows(15)
+                                    ->default(function (User $record) {
+                                        return $record->memo;
+                                    })
+                            ])
+                            ->action(function (User $record, array $data): void {
+                                $record->update(['memo' => $data['memo']]);
+                            })
+                    )
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')

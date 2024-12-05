@@ -17,49 +17,49 @@ class DefaultUserSeeder extends Seeder
     {
         // ユーザー1
         User::create([
-            'name' => '管理者のフリーレン',
+            'name' => '管理者テストユーザー',
             'type' => 'admin',
-            'email' => 'tankourou800@gmail.com',
-            'password' => Hash::make('Runrun831@'),
-            'address' => '522-0002',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('Aa123456'),
+            'address' => '123-1234',
             'region' => 'ヴァイゼ地方',
-            'phone_number' => '07043323039',
+            'phone_number' => '08000000000',
             'status' => true,
         ]);
 
         // ユーザー2
         User::create([
-            'name' => '一般ユーザーのフリーレン',
+            'name' => '一般テストユーザー',
             'type' => 'user',
             'email' => 'user@example.com',
-            'password' => Hash::make('Runrun831@'),
-            'address' => '522-0002',
+            'password' => Hash::make('Aa123456'),
+            'address' => '123-1234',
             'region' => 'ヴァイゼ地方',
-            'phone_number' => '07043323039',
+            'phone_number' => '08000000000',
             'status' => true,
         ]);
 
         // ユーザー3
         User::create([
-            'name' => 'FPのフリーレン',
+            'name' => 'FPテストユーザー',
             'type' => 'fp',
-            'email' => 'tankourou@icloud.com',
-            'password' => Hash::make('Runrun831@'),
-            'address' => '522-0002',
+            'email' => 'fp@example.com',
+            'password' => Hash::make('Aa123456'),
+            'address' => '123-1234',
             'region' => 'ヴァイゼ地方',
-            'phone_number' => '07043323039',
+            'phone_number' => '08000000000',
             'status' => true,
         ]);
 
         // ユーザー4
         User::create([
-            'name' => '加盟店のフリーレン',
+            'name' => '加盟店テストユーザー',
             'type' => 'merchant',
-            'email' => 'store@example.com',
-            'password' => Hash::make('Runrun831@'),
-            'address' => '522-0002',
+            'email' => 'merchant@example.com',
+            'password' => Hash::make('Aa123456'),
+            'address' => '123-1234',
             'region' => 'ヴァイゼ地方',
-            'phone_number' => '07043323039',
+            'phone_number' => '08000000000',
             'status' => true,
         ]);
     }

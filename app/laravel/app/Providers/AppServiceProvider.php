@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
+use App\Http\Middleware\RedirectIfRouteNotDefined;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,8 +19,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot(Router $router): void
     {
-        Vite::prefetch(concurrency: 3);
+        // ミドルウェアを登録
+        $router->pushMiddlewareToGroup('web', RedirectIfRouteNotDefined::class);
     }
 }

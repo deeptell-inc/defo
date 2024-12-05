@@ -10,14 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
-
-// 追加
 use Illuminate\Database\Eloquent\Builder;
-
+use Laravel\Jetstream\HasProfilePhoto;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasProfilePhoto, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +32,14 @@ class User extends Authenticatable implements FilamentUser
         'address',
         'region',
         'phone_number',
+        'profile_photo_path',
+        //追加2
+        'contact_person_name',
+        'contact_person_phone',
+        'contact_person_email',
+        'position',
+        //追加３
+        'memo',
     ];
 
     /**
@@ -43,6 +50,8 @@ class User extends Authenticatable implements FilamentUser
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_recovery_codes', // 再導入
+        'two_factor_secret',        // 再導入
     ];
 
     /**
@@ -53,7 +62,16 @@ class User extends Authenticatable implements FilamentUser
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'status' => 'boolean', // 追加
+        'status' => 'boolean',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'profile_photo_url',
     ];
 
     /**
@@ -161,10 +179,19 @@ class User extends Authenticatable implements FilamentUser
             });
     }
 
-    // Function to check user type
+    /**
+     * ユーザーのタイプを確認する
+     */
     public function isType($type)
     {
         return $this->type === $type;
     }
-}
 
+    /**
+     * 二要素認証が有効かどうかを確認する
+     */
+    public function hasTwoFactorAuthenticationEnabled(): bool
+    {
+        return !is_null($this->two_factor_secret);
+    }
+}

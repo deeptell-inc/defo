@@ -81,4 +81,14 @@ class EditMeeting extends EditRecord
             'このミーティングを編集する権限がありません。'
         );
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'ミーティングを更新しました';
+    }
+
+    protected function getSavedNotificationMessage(): ?string
+    {
+        return "{$this->record->title}のミーティング情報が更新されました。";
+    }
 }

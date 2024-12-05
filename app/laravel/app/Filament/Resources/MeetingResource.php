@@ -25,7 +25,10 @@ class MeetingResource extends Resource
     protected static ?string $model = Meeting::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
-    protected static ?string $navigationGroup = 'Meeting Management';
+    protected static ?string $navigationGroup = 'ミーティング管理';
+    protected static ?string $navigationLabel = 'ミーティング管理';
+    protected static ?string $modelLabel = 'ミーティング';
+    protected static ?string $pluralModelLabel = 'ミーティング';
 
     public static function before($request)
     {
@@ -216,7 +219,7 @@ class MeetingResource extends Resource
                         } elseif ($state === 'pending') {
                             return "保留中";
                         } else {
-                            return 'すべてキャンセル';
+                            return 'すべ��キャンセル';
                         }
                     }),
                 Tables\Columns\TextColumn::make('created_at')
@@ -230,7 +233,7 @@ class MeetingResource extends Resource
                     ->options([
                         'confirmed' => '確定済み',
                         'pending' => '保留中',
-                        'cancelled' => 'すべてキャンセル',
+                        'cancelled' => 'キャンセル済み',
                     ])
                     ->query(function (Builder $query, array $data) {
                         if (!$data['value']) {
@@ -264,8 +267,9 @@ class MeetingResource extends Resource
                     ->visible(fn () => Auth::user()->type === 'admin')
                     ->requiresConfirmation()
                     ->modalHeading('ミーティングの削除')
-                    ->modalDescription('このミーティング提案を削除してもよろしいですか？FPに通知メールが送信されます。')
-                    ->modalSubmitActionLabel('はい、削除します')
+                    ->modalDescription('このミーティングを削除してもよろしいですか？')
+                    ->modalSubmitActionLabel('削除する')
+                    ->modalCancelActionLabel('キャンセル')
                     ->action(function (Meeting $record) {
                         $fp = $record->fp;
                         
@@ -290,8 +294,9 @@ class MeetingResource extends Resource
                         ->label('一括削除')
                         ->visible(fn () => Auth::user()->type === 'admin')
                         ->modalHeading('複数のミーティングを削除')
-                        ->modalDescription('選択したミーティング提案を削除してもよろしいですか？各FPに通知メールが送信されます。')
-                        ->modalSubmitActionLabel('はい、すべて削除します')
+                        ->modalDescription('選択したミーティングをすべて削除してもよろしいですか？')
+                        ->modalSubmitActionLabel('すべて削除する')
+                        ->modalCancelActionLabel('キャンセル')
                         ->action(function (Collection $records) {
                             DB::beginTransaction();
                             

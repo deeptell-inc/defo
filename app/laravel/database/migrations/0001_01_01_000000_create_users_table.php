@@ -18,13 +18,22 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->rememberToken();
+            $table->foreignId('current_team_id')->nullable();
+            $table->string('profile_photo_path', 2048)->nullable();
+            $table->timestamps();
+            //追加1
             $table->boolean('status')->default(true); // 管理者系はこちらのカラムで制限
-            // 追加カラム（nullable）
             $table->string('address')->nullable();
             $table->string('region')->nullable();
             $table->string('phone_number')->nullable();
-            $table->rememberToken();
-            $table->timestamps();
+            //追加2
+            $table->string('contact_person_name')->nullable(); // 担当者者指名
+            $table->string('contact_person_phone')->nullable(); // 担当者の電話番号
+            $table->string('contact_person_email')->nullable(); // 担当者のメールアドレス
+            $table->string('position')->nullable(); // 役職
+            //追加3
+            $table->text('memo')->nullable(); // メモカラムを追加
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
