@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className="bg-white mt-12 border-t">
       <div className="container mx-auto px-4 py-8">
@@ -13,9 +17,12 @@ const Footer = () => {
             <h3 className="font-bold text-lg mb-4">リンク</h3>
             <ul className="space-y-2">
               <li>
-                <a href="/" className="text-gray-600 hover:text-primary">
+                <span
+                  onClick={() => navigate('/')}
+                  className="text-gray-600 hover:text-primary cursor-pointer"
+                >
                   ホーム
-                </a>
+                </span>
               </li>
               <li>
                 <a
@@ -28,7 +35,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-              <a
+                <a
                   href="https://www.gozigen.com/wp/compliance/"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -48,19 +55,28 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/admin" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary">
+                <span
+                  onClick={() => navigate('/admin')}
+                  className="text-gray-600 hover:text-primary cursor-pointer"
+                >
                   管理者はこちら
-                </a>
+                </span>
               </li>
               <li>
-                <a href="/survey/fp" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary">
+                <span
+                  onClick={() => navigate('/survey/fp')}
+                  className="text-gray-600 hover:text-primary cursor-pointer"
+                >
                   FPはこちら
-                </a>
+                </span>
               </li>
               <li>
-                <a href="/merchant" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary">
+                <span
+                  onClick={() => navigate('/merchant')}
+                  className="text-gray-600 hover:text-primary cursor-pointer"
+                >
                   加盟店はこちら
-                </a>
+                </span>
               </li>
             </ul>
           </div>

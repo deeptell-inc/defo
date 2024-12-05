@@ -22,9 +22,7 @@ Route::middleware([
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
-Route::get('/', [DashboardController::class, 'index'])->name('main');
-
-
+Route::get('/', [DashboardController::class, 'index']);
 
 use App\Filament\Pages\EditProfilePage;
 Route::middleware(['web', 'auth'])->group(function () {

@@ -166,6 +166,5 @@ https://juno-engineer.com/article/laravel-xserver-deploy/
 
 これらの手順を試しても問題が解決しない場合は、Xserverのサポートに詳細な状況を説明して助けを求めることをおすすめします。サーバー側の設定や権限の問題がある可能性があるためです。
 
-
 ## 本番データベース
 
