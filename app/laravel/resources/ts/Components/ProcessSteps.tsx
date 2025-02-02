@@ -1,3 +1,4 @@
+import React from 'react';
 import { Check, ArrowRight, User, FileText, Contact } from "lucide-react";
 import { motion } from 'framer-motion';
 import { ProcessStep } from '@/types/process';

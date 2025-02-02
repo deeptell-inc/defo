@@ -41,7 +41,7 @@ const Header = () => {
         <span
           onClick={() => handleNavigate('/')}
           className="flex items-center space-x-4 cursor-pointer">
-          <h1 className="text-xl font-bold text-primary">六次元</h1>
+          <h1 className="text-xl font-bold text-primary">五次元</h1>
         </span>
 
         {/* Mobile Menu */}

@@ -22,7 +22,7 @@ export default {
       colors: {
         primary: "#2896C8",
         secondary: "#64B5E6",
-        background: "#F8F9FA",
+        background: "#008751",
         text: "#2D3436",
         "card-bg": "#FFFFFF",
         border: "hsl(var(--border))",
