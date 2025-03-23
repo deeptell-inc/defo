@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\Api\UserImportController;
+
 
 Route::get('/sample', function () {
     return response()->json([
@@ -21,3 +23,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('coupons', CouponController::class);
+
+Route::post('/users/import', [UserImportController::class, 'import']);

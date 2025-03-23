@@ -5,13 +5,18 @@ import { ProcessStep } from '@/types/process';
 import { cn } from "@/lib/utils";
 
 const progressSteps = [
-  { id: 'inquiry', label: '問い合わせ済', icon: FileText },
-  { id: 'phone_confirmed', label: '確認電話済', icon: Check },
-  { id: 'fp_attended', label: 'FPアテンド済', icon: User },
-  { id: 'schedule_adjusted', label: '日程調整済', icon: ArrowRight },
-  { id: 'first_meeting', label: '初回面談', icon: User },
-  { id: 'multiple_meetings', label: '複数面談', icon: User },
-  { id: 'contracted', label: '契約済', icon: Contact }, // Changed from Contract to Contact
+  { id: 'confirmation_possible', label: '確認電話可能', icon: FileText },
+  { id: 're_call', label: '再架電', icon: FileText },
+  { id: 'phone_confirmed', label: '確認電話通過', icon: Check },
+  { id: 'fp_not_assigned', label: 'FP未振り', icon: User },
+  { id: 'fp_inquiry', label: 'FP照会中', icon: User },
+  { id: 'chat_group_pending', label: 'チャットグループ未', icon: User },
+  { id: 'fp_assigned_no_schedule', label: 'FP振り済日程未定', icon: ArrowRight },
+  { id: 'fp_scheduled_monthly', label: 'FP日時確定/月間', icon: ArrowRight },
+  { id: 'execution_monthly', label: '実行/月間', icon: ArrowRight },
+  { id: 'fp_scheduled_today', label: 'FP日時確定/当日', icon: ArrowRight },
+  { id: 'execution_today', label: '実行/当日', icon: ArrowRight },
+  { id: 'execution_confirmation', label: '実行確認用', icon: Contact },
 ];
 
 interface ProcessStepsProps {

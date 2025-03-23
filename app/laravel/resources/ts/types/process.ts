@@ -1,8 +1,4 @@
-export type ProcessStep = {
-  id: string;
-  label: string;
-  description: string;
-};
+export type ProcessStep = typeof PROCESS_STEPS[number];
 
 export type Merchant = {
   id: string;
@@ -11,12 +7,17 @@ export type Merchant = {
   progress: string;
 };
 
-export const PROCESS_STEPS: ProcessStep[] = [
-  { id: 'inquiry', label: '問い合わせ済', description: '初期問い合わせが完了' },
-  { id: 'phone_confirmed', label: '確認電話済', description: '電話での初期確認完了' },
-  { id: 'fp_attended', label: 'FPアテンド済', description: 'FPによる対応完了' },
-  { id: 'schedule_adjusted', label: '日程調整済', description: '面談日程の調整完了' },
-  { id: 'first_meeting', label: '初回面談', description: '初回面談実施済' },
-  { id: 'multiple_meetings', label: '複数面談', description: '追加面談実施中' },
-  { id: 'contracted', label: '契約済', description: '契約締結完了' },
-];
+export const PROCESS_STEPS = [
+  { id: 'confirmation_possible', label: '確認電話可能', description: '' },
+  { id: 're_call', label: '再架電', description: '' },
+  { id: 'phone_confirmed', label: '確認電話通過', description: '' },
+  { id: 'fp_not_assigned', label: 'FP未振り', description: '' },
+  { id: 'fp_inquiry', label: 'FP照会中', description: '' },
+  { id: 'chat_group_pending', label: 'チャットグループ未', description: '' },
+  { id: 'fp_assigned_no_schedule', label: 'FP振り済日程未定', description: '' },
+  { id: 'fp_scheduled_monthly', label: 'FP日時確定/月間', description: '' },
+  { id: 'execution_monthly', label: '実行/月間', description: '' },
+  { id: 'fp_scheduled_today', label: 'FP日時確定/当日', description: '' },
+  { id: 'execution_today', label: '実行/当日', description: '' },
+  { id: 'execution_confirmation', label: '実行確認用', description: '' },
+] as const;

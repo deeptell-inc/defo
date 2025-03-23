@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -33,12 +32,11 @@ class User extends Authenticatable implements FilamentUser
         'region',
         'phone_number',
         'profile_photo_path',
-        //追加2
+        // 追加項目
         'contact_person_name',
         'contact_person_phone',
         'contact_person_email',
         'position',
-        //追加３
         'memo',
     ];
 
@@ -50,8 +48,8 @@ class User extends Authenticatable implements FilamentUser
     protected $hidden = [
         'password',
         'remember_token',
-        'two_factor_recovery_codes', // 再導入
-        'two_factor_secret',        // 再導入
+        'two_factor_recovery_codes',
+        'two_factor_secret',
     ];
 
     /**
@@ -61,8 +59,8 @@ class User extends Authenticatable implements FilamentUser
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'status' => 'boolean',
+        'password'          => 'hashed',
+        'status'            => 'boolean',
     ];
 
     /**
@@ -75,12 +73,12 @@ class User extends Authenticatable implements FilamentUser
     ];
 
     /**
-     * Filament管理画面へのアクセス権を確認するメソッド
+     * Filament 管理画面へのアクセス権を確認するメソッド
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        // 'admin', 'fp', 'merchant' であり、statusがtrueの場合にアクセスを許可
-        return $this->status && in_array($this->type, ['admin', 'fp', 'merchant']);
+        // 'admin', 'fp', 'merchant' であり、status が true の場合にアクセスを許可
+        reddturn $this->status && in_array($this->type, ['admin', 'fp', 'merchant']);
     }
 
     /**
@@ -100,7 +98,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * FPとして参加するミーティング
+     * FP として参加するミーティング
      */
     public function fpMeetings(): HasMany
     {
@@ -132,7 +130,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->meetings()
             ->whereHas('dates', function ($query) {
                 $query->where('status', MeetingDate::STATUS_CONFIRMED)
-                    ->where('is_selected', true);
+                      ->where('is_selected', true);
             });
     }
 
@@ -147,7 +145,7 @@ class User extends Authenticatable implements FilamentUser
             })
             ->whereDoesntHave('dates', function ($query) {
                 $query->where('status', MeetingDate::STATUS_CONFIRMED)
-                    ->where('is_selected', true);
+                      ->where('is_selected', true);
             });
     }
 
@@ -195,3 +193,6 @@ class User extends Authenticatable implements FilamentUser
         return !is_null($this->two_factor_secret);
     }
 }
+
+
+
