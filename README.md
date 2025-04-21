@@ -1,3 +1,10 @@
+# セットアップ
+
+```sh
+$ chmod +x setup_laravel_docker.sh
+./setup_laravel_docker.sh
+```
+
 # Laravelの環境
 
 MySQLも入っていますが、いらないかもしれないです。
