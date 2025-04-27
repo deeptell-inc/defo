@@ -30,7 +30,7 @@ const Header = () => {
       <span
         onClick={() => handleNavigate('/survey/user')}
         className="text-text hover:text-primary transition-colors cursor-pointer">
-        ログイン
+        新規登録
       </span>
     </>
   );
