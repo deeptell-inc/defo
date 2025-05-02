@@ -4,6 +4,14 @@ import laravel from 'laravel-vite-plugin';
 import { resolve } from 'path';
 
 export default defineConfig({
+  server: {
+    host: '0.0.0.0', // コンテナ内でリッスンするホスト
+    port: 5173,      // コンテナ内でリッスンするポート
+    hmr: {
+      host: 'localhost', // ★ブラウザが接続するホスト (localhost)
+      port: 5173,      // ★ブラウザが接続するポート
+    },
+  },
   plugins: [
     laravel({
       input: 'resources/ts/main.tsx',
